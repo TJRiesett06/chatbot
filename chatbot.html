@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Chatbot</title>
+  </head>
+  <body>
+    <div class="js-container"></div>
+
+    
+    <script src="https://unpkg.com/supersimpledev/react.js"></script>
+    <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
+
+    
+    <script src="https://unpkg.com/supersimpledev/babel.js"></script>
+    <script type="text/babel">
+      
+      //This is a component in React. Written just like a function but uses PascalCase with a Capital letter to start the name.
+      function ChatInput(){
+        return (
+          //JSX is strict and needs closing tags but bc <input> doesnt usually have one we can just put a space and /> to end the tag.
+          //We put the input and button inside a fragrement. This is just empty tags wrapped around them.
+          <>
+            <input placeholder="Send a message to Chatbot" size="30" />
+            <button>Send</button>
+          </>
+        );
+      }
+      
+      //We can see curly brackets, these allow us to insert JavaScript within our HTML {ChatInput()}.
+      //We are inserting a call to our ChatInput function which will return some HTML we created.
+      //Or we can use the component syntax below where we create a tag around the component and that allows us to call it <ChatInput></ChatInput> or <ChatInput />
+      const app = (
+        <>
+          <ChatInput />
+        </>
+      );
+
+      const container = document.querySelector('.js-container');
+      ReactDOM.createRoot(container).render(app);
+    </script>
+  </body>
+</html>
