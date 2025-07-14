@@ -20,23 +20,82 @@
           //JSX is strict and needs closing tags but bc <input> doesnt usually have one we can just put a space and /> to end the tag.
           //We put the input and button inside a fragrement. This is just empty tags wrapped around them.
           <>
-            <input placeholder="Send a message to Chatbot" size="30" />
+            <input 
+              placeholder="Send a message to Chatbot" 
+              size="30" 
+            />
             <button>Send</button>
           </>
         );
       }
-      
-      //We can see curly brackets, these allow us to insert JavaScript within our HTML {ChatInput()}.
-      //We are inserting a call to our ChatInput function which will return some HTML we created.
-      //Or we can use the component syntax below where we create a tag around the component and that allows us to call it <ChatInput></ChatInput> or <ChatInput />
-      const app = (
-        <>
-          <ChatInput />
-        </>
-      );
 
+      //we have one type of parameter for component known as props.
+      //Props stands for properties. Props is an object and each attribute we give to our component becomes a property in our props object
+      //This parameter is taking the properties (message and sender) out of the props object and making them set equal to their value as a variable.
+      function ChatMessage({ message, sender }){
+        //These three lines below all do the same things and the parameter we have in the component above.
+        //These are just longer ways to write it
+        //const message = props.message;
+        //const sender = props.sender;
+        //const { message, sender } = props;
+
+        /*
+        if(sender === 'robot'){
+          return (
+            <div>
+              <img src="robot.png" width="50" />
+              {message}
+            </div>
+          );
+        }
+        */
+
+        return (
+          //This is called the guard opperator. If the statement on the left is true then the statement on the right of the && will be exceuted.
+          //In out case if sender = robot then we create <img> of robot then create its message.
+          //We can see curly brackets, these allow us to insert JavaScript within our HTML.
+          //then once inside the {} if we want to put more html we need to use () if we want html on multiple lines.
+          <div>
+            {sender === 'robot' && (
+              <img src="robot.png" width="50" />
+            )}
+            {message}
+            {sender === 'user' && (
+              <img src="user.png" width="50" />
+            )}
+          </div>
+        );
+      }
+      
+      //This is the App compoment which represent the whole project. Its how we'll render everything.
+      //we can use the component syntax below where we create a tag around the component and that allows us to call it <ChatInput /> or <ChatMessage />
+      function App(){
+        return (
+          <>
+            <ChatInput />
+            <ChatMessage 
+              message="hello chatbot" 
+              sender="user" 
+            />
+            <ChatMessage 
+              message="Hello! How can I help you?" 
+              sender="robot" 
+              />
+            <ChatMessage 
+              message="can you get me a todays date" 
+              sender="user" 
+            />
+            <ChatMessage 
+              message="Today is July 9" 
+              sender="robot" 
+            />
+          </>
+        );
+      }
+
+      //we render the App component.
       const container = document.querySelector('.js-container');
-      ReactDOM.createRoot(container).render(app);
+      ReactDOM.createRoot(container).render(<App />);
     </script>
   </body>
 </html>
