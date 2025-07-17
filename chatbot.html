@@ -10,21 +10,62 @@
     <script src="https://unpkg.com/supersimpledev/react.js"></script>
     <script src="https://unpkg.com/supersimpledev/react-dom.js"></script>
 
+    <script src="https://unpkg.com/supersimpledev/chatbot.js"></script>
     
     <script src="https://unpkg.com/supersimpledev/babel.js"></script>
     <script type="text/babel">
       
       //This is a component in React. Written just like a function but uses PascalCase with a Capital letter to start the name.
-      function ChatInput(){
+      function ChatInput({ chatMessages, setChatMessages }){
+        const [inputText, setInputText] = React.useState('');
+
+        function saveInputText(event){
+          setInputText(event.target.value);
+        }
+
+        //whenever we modify or update the chatMessages array we need to first copy its data.
+        //we need to use the ...spread operator to copy the chatMessages array
+
+        function sendMessage(){
+          const newChatMessages =[
+            ...chatMessages,
+            {
+              message: inputText,
+              sender: 'user',
+              id: crypto.randomUUID()
+            },
+          ];
+
+          setChatMessages(newChatMessages);
+
+          const response = Chatbot.getResponse(inputText);
+          setChatMessages([
+            ...newChatMessages,
+            {
+              message: response,
+              sender: 'robot',
+              id: crypto.randomUUID()
+            },
+          ]);
+
+          setInputText('');
+        }
+
         return (
           //JSX is strict and needs closing tags but bc <input> doesnt usually have one we can just put a space and /> to end the tag.
           //We put the input and button inside a fragrement. This is just empty tags wrapped around them.
+          //onChange allows us to see when anything changes within our function.
+          //in our ChatInput component we give it a function with an event parameter. This event parameter is an object.
+          //we can use dot notation to attatch target to it whihc lets us see the element the event is attatched to.
+          //we can then set value for that target to get the value out of the element.
           <>
             <input 
               placeholder="Send a message to Chatbot" 
-              size="30" 
+              size="30"
+              onChange={saveInputText} 
+              value={inputText}
             />
-            <button>Send</button>
+            <button onClick={sendMessage} >Send</button>
           </>
         );
       }
@@ -66,28 +107,67 @@
           </div>
         );
       }
+
+      function ChatMessages({ chatMessages }){
+        //we write some JSX that takes the array and .map() through the array.
+        //We create a <ChatMessage /> component that will have three props (message, sender, and id) that will be equal to the array objects properties message, sender, and id.
+        //The <ChatMessage /> component is then returned within the <App /> component so it can be rendered.
+        return(
+          <>
+            {chatMessages.map((chatMessage)=>{
+              return (
+                <ChatMessage 
+                  message={chatMessage.message}
+                  sender={chatMessage.sender}
+                  key={chatMessage.id}
+                />
+              );
+            })}
+          </>
+        );
+      }
       
       //This is the App compoment which represent the whole project. Its how we'll render everything.
       //we can use the component syntax below where we create a tag around the component and that allows us to call it <ChatInput /> or <ChatMessage />
       function App(){
+        //We are saving the data in an array with objects.
+        //we need to save this data in 'state'.
+        //This means when we update the data later with our setChatMessages variable it will also update the html
+        //React.useState is an array that contains two values.
+        //The first is the current data we have saved. We are saving that data to a variable so it can be .map() and rendered late
+        //The second value is a function that can update the data.
+        //We are going to use array destructuring which allows us to get both the first and second value of the array on one line.
+        //chatMessages will get our first value from the React.useState array, and setChatMessages will get our second value.
+        const [chatMessages, setChatMessages] = React.useState([{
+          message: 'hello chatbot',
+          sender: 'user',
+          id: 'id1'
+        }, {
+          message: 'Hello! How can I help you?',
+          sender: 'robot',
+          id: 'id2'
+        }, {
+          message: 'can you get me a todays date',
+          sender: 'user',
+          id: 'id3'
+        }, {
+          message: 'Today is July 14',
+          sender: 'robot',
+          id: 'id4'
+        }]);
+        //const chatMessages = array[0];
+        //const setChatMessages = array[1];
+        //const [chatMessages, setChatMessages] = array;
+
+        //we then return the compenent for the input and ChatMessages.
         return (
           <>
-            <ChatInput />
-            <ChatMessage 
-              message="hello chatbot" 
-              sender="user" 
+            <ChatInput 
+              chatMessages={chatMessages}
+              setChatMessages={setChatMessages}
             />
-            <ChatMessage 
-              message="Hello! How can I help you?" 
-              sender="robot" 
-              />
-            <ChatMessage 
-              message="can you get me a todays date" 
-              sender="user" 
-            />
-            <ChatMessage 
-              message="Today is July 9" 
-              sender="robot" 
+            <ChatMessages
+              chatMessages={chatMessages}
             />
           </>
         );
