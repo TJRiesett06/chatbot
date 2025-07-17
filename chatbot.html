@@ -2,6 +2,76 @@
 <html>
   <head>
     <title>Chatbot</title>
+    <style>
+      body{
+        font-family: Arial, Helvetica, sans-serif;
+        margin: 0;
+      }
+    
+      .send-button{
+        background-color: rgb(25, 135, 84);
+        color: white;
+        padding: 12px 20px;
+        border: none;
+        border-radius: 10px;
+        margin-left: 10px;
+        font-size: 15px;
+        cursor: pointer;
+      }
+
+      .chat-input{
+        padding: 12px 15px;
+        border-radius: 10px;
+        border-width: 1px;
+        font-size: 15px;
+        flex-grow: 1;
+      }
+
+      .chat-input-container{
+        display: flex;
+        margin-bottom: 60px;
+      }
+
+      .app-container{
+        max-width: 600px;
+        flex-direction: column;
+        margin-left: auto;
+        margin-right: auto;
+        height: 100vh;
+        display: flex;
+        flex-direction: column;
+      }
+
+      .chat-message-user{
+        display: flex;
+        justify-content: end;
+        align-items: start;
+      }
+
+      .chat-message-robot{
+        display: flex;
+        align-items: start;
+      }
+
+      .chat-message-text{
+        background-color: rgb(238, 238, 238);
+        padding: 15px 20px;
+        border-radius: 10px;
+        margin-right: 10px;
+        margin-left: 10px;
+        margin-bottom: 20px;
+        max-width: 300px;
+      }
+
+      .chat-message-profile{
+        width: 45px;
+      }
+
+      .chat-messages-container{
+        flex-grow: 1;
+        margin-top: 20px;
+      }
+    </style>
   </head>
   <body>
     <div class="js-container"></div>
@@ -58,15 +128,16 @@
           //in our ChatInput component we give it a function with an event parameter. This event parameter is an object.
           //we can use dot notation to attatch target to it whihc lets us see the element the event is attatched to.
           //we can then set value for that target to get the value out of the element.
-          <>
+          <div className="chat-input-container">
             <input 
               placeholder="Send a message to Chatbot" 
               size="30"
               onChange={saveInputText} 
               value={inputText}
+              className="chat-input"
             />
-            <button onClick={sendMessage} >Send</button>
-          </>
+            <button className="send-button" onClick={sendMessage} >Send</button>
+          </div>
         );
       }
 
@@ -96,13 +167,19 @@
           //In out case if sender = robot then we create <img> of robot then create its message.
           //We can see curly brackets, these allow us to insert JavaScript within our HTML.
           //then once inside the {} if we want to put more html we need to use () if we want html on multiple lines.
-          <div>
+          <div className={
+            sender === 'user' 
+            ? 'chat-message-user' 
+            : 'chat-message-robot'
+          }>
             {sender === 'robot' && (
-              <img src="robot.png" width="50" />
+              <img className="chat-message-profile" src="robot.png" />
             )}
-            {message}
+            <div className="chat-message-text">
+              {message}
+            </div>
             {sender === 'user' && (
-              <img src="user.png" width="50" />
+              <img className="chat-message-profile" src="user.png" />
             )}
           </div>
         );
@@ -113,7 +190,7 @@
         //We create a <ChatMessage /> component that will have three props (message, sender, and id) that will be equal to the array objects properties message, sender, and id.
         //The <ChatMessage /> component is then returned within the <App /> component so it can be rendered.
         return(
-          <>
+          <div className="chat-messages-container">
             {chatMessages.map((chatMessage)=>{
               return (
                 <ChatMessage 
@@ -123,7 +200,7 @@
                 />
               );
             })}
-          </>
+          </div>
         );
       }
       
@@ -161,15 +238,15 @@
 
         //we then return the compenent for the input and ChatMessages.
         return (
-          <>
+          <div className="app-container">
+            <ChatMessages
+              chatMessages={chatMessages}
+            />
             <ChatInput 
               chatMessages={chatMessages}
               setChatMessages={setChatMessages}
             />
-            <ChatMessages
-              chatMessages={chatMessages}
-            />
-          </>
+          </div>
         );
       }
 
