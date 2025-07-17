@@ -70,6 +70,10 @@
       .chat-messages-container{
         flex-grow: 1;
         margin-top: 20px;
+        overflow-y: scroll;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+
       }
     </style>
   </head>
@@ -186,11 +190,29 @@
       }
 
       function ChatMessages({ chatMessages }){
+        //this allows us to automatically save an html element from the component.
+        const chatMessagesRef = React.useRef(null);
+        
+        
+        //this is called a hook. useState is also a hook.
+        //We always put them at the top of components
+        //useEffect lets us run some code after this component is updated or created.
+        React.useEffect(()=>{
+          //This will allow us to access the <div> chat-messages-container. Similiar to using queryselector to get an element.
+          const contatinerElem = chatMessagesRef.current
+          if(contatinerElem){
+            contatinerElem.scrollTop = contatinerElem.scrollHeight;
+          }
+          //we add an array as a second parameter and this is called a dependency array.
+          //it allows us to control when useEffect runs. it will only run when a message is created.
+        }, [chatMessages]);
+        
         //we write some JSX that takes the array and .map() through the array.
         //We create a <ChatMessage /> component that will have three props (message, sender, and id) that will be equal to the array objects properties message, sender, and id.
         //The <ChatMessage /> component is then returned within the <App /> component so it can be rendered.
+        //we give this <div> an attribute of ref with it equal to the variables we created that is intialized with the hook useRef()
         return(
-          <div className="chat-messages-container">
+          <div className="chat-messages-container" ref={chatMessagesRef}>
             {chatMessages.map((chatMessage)=>{
               return (
                 <ChatMessage 
