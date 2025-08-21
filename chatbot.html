@@ -107,7 +107,7 @@
               message: inputText,
               sender: 'user',
               id: crypto.randomUUID()
-            },
+            }
           ];
 
           setChatMessages(newChatMessages);
@@ -238,21 +238,9 @@
         //We are going to use array destructuring which allows us to get both the first and second value of the array on one line.
         //chatMessages will get our first value from the React.useState array, and setChatMessages will get our second value.
         const [chatMessages, setChatMessages] = React.useState([{
-          message: 'hello chatbot',
-          sender: 'user',
+          message: 'Welcome User!',
+          sender: 'robot',
           id: 'id1'
-        }, {
-          message: 'Hello! How can I help you?',
-          sender: 'robot',
-          id: 'id2'
-        }, {
-          message: 'can you get me a todays date',
-          sender: 'user',
-          id: 'id3'
-        }, {
-          message: 'Today is July 14',
-          sender: 'robot',
-          id: 'id4'
         }]);
         //const chatMessages = array[0];
         //const setChatMessages = array[1];
